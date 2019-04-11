@@ -1,4 +1,5 @@
 import random
+from Constants import DEGREE
 
 
 class Function:
@@ -7,7 +8,7 @@ class Function:
         self.generate_coefficients()
         self.fitness_score = 0
 
-    def generate_coefficients(self, degree=5):
+    def generate_coefficients(self, degree=DEGREE):
         for _ in range(degree):
             self.coefficients.append(random.randint(-500, 500))
         self.coefficients.append(random.randint(0, 200))

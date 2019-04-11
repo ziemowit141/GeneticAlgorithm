@@ -52,11 +52,21 @@ negative_y_coordinates = get_y(negative_points_list)
 # plt.axis([0, 500, 0, 500])
 # plt.show()
 
-best, fitness_list = algorithm(function_population, points_list)
+_, fitness_list, generation_counter = algorithm(function_population, points_list)
+
+for _ in range(19):
+    best, temp_fitness_list, temp_generation_counter = algorithm(function_population, points_list)
+    fitness_list = [x + y for x, y in zip(fitness_list, temp_fitness_list)]
+    generation_counter += temp_generation_counter
+
+fitness_list = [x/20 for x in fitness_list]
 y_pos = np.arange(len(fitness_list))
 plt.bar(y_pos, fitness_list)
+plt.xlabel('Number of generation')
+plt.ylabel('Fitness score')
+plt.title('Average fitness score per generation (20runs)')
 print(fitness_list)
-print(len(fitness_list))
+print("Average number of generations to find perfect solution: " + str(generation_counter/20))
 plt.show()
 
 # def plot_function(function):

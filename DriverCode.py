@@ -1,9 +1,4 @@
-POPULATION_SIZE = 500
-INDIVIDUALS_FROM_TOURNAMENT = 10
-TOURNAMENT_SIZE = 20
-NUMBER_OF_POINTS = 200
-NUMBER_OF_GENERATIONS = 5
-
+from Constants import *
 import random
 
 from Function import Function
@@ -27,7 +22,7 @@ def tournament_selection(population, iterations):
         tournament_population = random.sample(population, int(POPULATION_SIZE/iterations))
         tournament_population.sort(key=lambda fn: fn.fitness_score, reverse=True)
 
-        for individual in tournament_population[:int(INDIVIDUALS_FROM_TOURNAMENT / iterations)]:
+        for individual in tournament_population[:int(INDIVIDUALS_FROM_TOURNAMENT + 1)]:
             temp_population.append(individual)
 
     return temp_population[:POPULATION_SIZE]
@@ -54,7 +49,7 @@ def crossover_coefficients(first_coefficient, second_coefficient):
         child_coefficient_binary = list(first_parent_coefficient_binary)
 
     pivot_val = random.randint(0, 100)
-    if pivot_val > 90:
+    if pivot_val > 95:
         return random.randint(-500, 500)
 
     for i in range(len_):
@@ -104,6 +99,8 @@ def algorithm(functions, points):
 
     population.sort(key=lambda f: f.fitness_score, reverse=True)
 
+    generation_counter = 0
+    generation_counter_stop_flag = False
     for _ in range(NUMBER_OF_GENERATIONS):
         print_population(population)
         population = tournament_selection(population, 10)
@@ -113,4 +110,10 @@ def algorithm(functions, points):
         population.sort(key=lambda f: f.fitness_score, reverse=True)
         fitness_list.append(population[0].fitness_score)
 
-    return population[0], fitness_list
+        if not generation_counter_stop_flag:
+            generation_counter += 1
+
+        if population[0].fitness_score == NUMBER_OF_POINTS:
+            generation_counter_stop_flag = True
+
+    return population[0], fitness_list, generation_counter
